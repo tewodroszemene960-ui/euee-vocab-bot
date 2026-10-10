@@ -2,23 +2,23 @@ from datetime import datetime
 import pandas as pd
 import requests
 
-# 1. Google Sheet እና Telegram ማስተካከያዎች
+# 1. Google Sheet እና Telegram ማዋቀሪያዎች
 SHEET_ID = "1lzFiQduv_JiUS3MCUqhZ70KA0ppJRPNpItUl8Tuc6ew"
 BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJX80qs8DqO0pLSmMw"
 CHAT_ID = "-1004488635599"
 
-# 2. የጀመረበት መነሻ ቀን (October 10, 2026)
+# 2. የሚጀምርበት ቀን (October 10, 2026)
 START_DATE = datetime(2026, 10, 10)
 
-# 3. ከ Google Sheet መረጃ ማንበብ
+# 3. ከ Google Sheet ዳታ ማንበብ
 sheet_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=SAT_GMAT_2500_Vocabulary"
 
 def send_daily_vocab():
     try:
         df = pd.read_csv(sheet_url)
-        print(f"በተሳካ ሁኔታ ተነበበ! አጠቃላይ ቃላት ብዛት፦ {len(df)}")
+        print(f"✅ ተሳካ! አጠቃላይ ቃላት ብዛት:- {len(df)}")
     except Exception as e:
-        print(f"❌ ማንበብ አልተቻለም፦ {e}")
+        print(f"❌ ማንበብ አልተቻለም:- {e}")
         return
 
     today = datetime.now()
@@ -31,17 +31,16 @@ def send_daily_vocab():
     count = 10
 
     if start_index >= len(df):
-        print("🎉 እንኳን ደስ አለህ! 2,500 ቃላት ሙሉ በሙሉ ተልከዋል!")
+        print("🎉  बधाई! አዲስ ቃላት የሉም፣ 2,500 ቃላት በሙሉ ተጠናቀዋል!")
         return
 
     selected_words = df.iloc[start_index : start_index + count]
     day_number = days_passed + 1
-    
-    # አጠቃላይ ቀናትን በራስ-ሰር ማሰላት
+
     total_days = (len(df) + count - 1) // count
     message = f"📚 **EUEE Daily Vocabulary Builder** (Day {day_number}/{total_days})\n\n"
 
-            for idx, row in selected_words.iterrows():
+    for idx, row in selected_words.iterrows():
         word = str(row.iloc[1]).strip() if len(row) > 1 else ""
         pos = str(row.iloc[2]).strip() if len(row) > 2 else ""
         meaning = str(row.iloc[3]).strip() if len(row) > 3 else ""
@@ -64,7 +63,6 @@ def send_daily_vocab():
     else:
         print(f"❌ Error Code: {response.status_code}")
         print(f"❌ Full Response: {response.text}")
-
 
 if __name__ == "__main__":
     send_daily_vocab()
