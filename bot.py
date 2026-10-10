@@ -41,19 +41,25 @@ def send_daily_vocab():
     total_days = (len(df) + count - 1) // count
     message = f"📚 **EUEE Daily Vocabulary Builder** (Day {day_number}/{total_days})\n\n"
 
-    for idx, row in selected_words.iterrows():
+        for idx, row in selected_words.iterrows():
         # Column A = No, Column B = Word, Column C = POS, Column D = Meaning, Column E = Example
+        # እዚህ ጋር የኢንዴክስ ቁጥሮቹን እንደ ሉህዎ አቀማመጥ አስተካክለናል:
+        # row.iloc[1] = ቃሉ (Word), row.iloc[2] = የቃሉ ክፍል (POS)
+        # row.iloc[3] = ትርጉም (Meaning), row.iloc[4] = ምሳሌ (Example)
+        
         word = str(row.iloc[1]).strip() if len(row) > 1 else ""
         pos = str(row.iloc[2]).strip() if len(row) > 2 else ""
         meaning = str(row.iloc[3]).strip() if len(row) > 3 else ""
         example = str(row.iloc[4]).strip() if len(row) > 4 else ""
 
-        message += f"🔹 **Word:** {word} {pos}\n"
+        message += f"🔹 **Word:** {word} ({pos})\n"
         if meaning and meaning.lower() != "nan":
             message += f"📖 **Meaning:** {meaning}\n"
         if example and example.lower() != "nan":
             message += f"📝 **Example:** {example}\n"
         message += "-----------------------------\n\n"
+
+    
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
