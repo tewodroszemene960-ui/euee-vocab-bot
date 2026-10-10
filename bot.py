@@ -4,10 +4,10 @@ import requests
 
 # 1. Google Sheet እና Telegram ማስተካከያዎች
 SHEET_ID = "1lzFiQduv_JiUS3MCUqhZ70KA0ppJRPNpItUl8Tuc6ew"
-BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJX80qs8DqOoPL5MmW"
+BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJX80qs8DqO0pLSmMw"
 CHAT_ID = "-1004488635599"
 
-# 2. የጀመረበት መነሻ ቀን
+# 2. የጀመረበት መነሻ ቀን (October 10, 2026)
 START_DATE = datetime(2026, 10, 10)
 
 # 3. ከ Google Sheet መረጃ ማንበብ
@@ -49,7 +49,7 @@ def send_daily_vocab():
         example = str(row.iloc[4]).strip() if len(row) > 4 else ""
 
         message += f"🔹 **Word:** {word} {pos}\n"
-        if meaning:
+        if meaning and meaning.lower() != "nan":
             message += f"📖 **Meaning:** {meaning}\n"
         if example and example.lower() != "nan":
             message += f"📝 **Example:** {example}\n"
