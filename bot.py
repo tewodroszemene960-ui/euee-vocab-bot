@@ -4,63 +4,67 @@ import requests
 
 # 1. Google Sheet እና Telegram ማስተካከያዎች
 SHEET_ID = "1lzFiQduv_JiUS3MCUqhZ70KA0ppJRPNpItUl8Tuc6ew"
-BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJx80qs8DqO0pLSmMw"
+BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJX80qs8DqOoPL5MmW"
 CHAT_ID = "-1004488635599"
 
-# የፕሮጀክቱ መጀመሪያ ቀን
+# 2. የጀመረበት መነሻ ቀን
 START_DATE = datetime(2026, 10, 10)
 
-# 2. ከ Google Sheet መረጃ ማንበብ
+# 3. ከ Google Sheet መረጃ ማንበብ
 sheet_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=SAT_GMAT_2500_Vocabulary"
+
 def send_daily_vocab():
-  try:
-    df = pd.read_csv(sheet_url)
-    print(f"በተሳካ ሁኔታ ተገናኘ! ጠቅላላ ቃላት ብዛት፦ {len(df)}")
-  except Exception as e:
-    print(f"ሺቱን ማንበብ አልተቻለም፦ {e}")
-    return
+    try:
+        df = pd.read_csv(sheet_url)
+        print(f"በተሳካ ሁኔታ ተነበበ! አጠቃላይ ቃላት ብዛት፦ {len(df)}")
+    except Exception as e:
+        print(f"❌ ማንበብ አልተቻለም፦ {e}")
+        return
 
-  today = datetime.now()
-  days_passed = (today - START_DATE).days
+    today = datetime.now()
+    days_passed = (today - START_DATE).days
 
-  if days_passed < 0:
-    days_passed = 0
+    if days_passed < 0:
+        days_passed = 0
 
-  start_index = days_passed * 10
-  count = 10
+    start_index = days_passed * 10
+    count = 10
 
-  if start_index >= len(df):
-    print("🎉 እንኳን ደስ አለህ! 2,400 ቃላቱን ሙሉ በሙሉ ጨርሰሃል!")
-    return
+    if start_index >= len(df):
+        print("🎉 እንኳን ደስ አለህ! 2,500 ቃላት ሙሉ በሙሉ ተልከዋል!")
+        return
 
-  selected_words = df.iloc[start_index : start_index + count]
-  day_number = days_passed + 1
-  message = f"📚 **EUEE Daily Vocabulary Builder** (Day {day_number}/240)\n\n"
+    selected_words = df.iloc[start_index : start_index + count]
+    day_number = days_passed + 1
+    
+    # አጠቃላይ ቀናትን በራስ-ሰር ማሰላት
+    total_days = (len(df) + count - 1) // count
+    message = f"📚 **EUEE Daily Vocabulary Builder** (Day {day_number}/{total_days})\n\n"
 
-  for idx, row in selected_words.iterrows():
-    word = row.iloc[0] if len(row) > 0 else ""
-    meaning = row.iloc[1] if len(row) > 1 else ""
-    example = row.iloc[2] if len(row) > 2 else ""
+    for idx, row in selected_words.iterrows():
+        # Column A = No, Column B = Word, Column C = POS, Column D = Meaning, Column E = Example
+        word = str(row.iloc[1]).strip() if len(row) > 1 else ""
+        pos = str(row.iloc[2]).strip() if len(row) > 2 else ""
+        meaning = str(row.iloc[3]).strip() if len(row) > 3 else ""
+        example = str(row.iloc[4]).strip() if len(row) > 4 else ""
 
-    message += f"🔹 Word: {word}\n"
-    message += f"📖 Meaning: {meaning}\n"
-    if pd.notna(example) and str(example).strip() != "":
-      message += f"📝 Example: {example}\n"
-    message += "\n" + "—" * 15 + "\n\n"
+        message += f"🔹 **Word:** {word} {pos}\n"
+        if meaning:
+            message += f"📖 **Meaning:** {meaning}\n"
+        if example and example.lower() != "nan":
+            message += f"📝 **Example:** {example}\n"
+        message += "-----------------------------\n\n"
 
-  url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-  payload = {"chat_id": CHAT_ID, "text": message}
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
 
-  response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload)
 
-  if response.status_code == 200:
-    print(
-        f"✅ የዕለቱ (Day {day_number}) 10 ቃላት በተሳካ ሁኔታ ወደ ቴሌግራም ተልከዋል!"
-    )
-  else:
-    print(f"❌ Error Code: {response.status_code}")
-    print(f"❌ Full Response: {response.text}")
-
+    if response.status_code == 200:
+        print(f"✅ ፖስት (Day {day_number}) 10 ቃላት በቴሌግራም ግሩፕ በተሳካ ሁኔታ ተላክዋል!")
+    else:
+        print(f"❌ Error Code: {response.status_code}")
+        print(f"❌ Full Response: {response.text}")
 
 if __name__ == "__main__":
-  send_daily_vocab()
+    send_daily_vocab()
