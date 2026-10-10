@@ -46,7 +46,10 @@ def send_daily_vocab():
         meaning = str(row.iloc[3]).strip() if len(row) > 3 else ""
         example = str(row.iloc[4]).strip() if len(row) > 4 else ""
 
-        message += f"🔹 **Word:** {word} ({pos})\n"
+        # የ POS ቅንፍ ማስተካከያ
+        pos_display = f" {pos}" if pos else ""
+
+        message += f"🔹 **Word:** {word}{pos_display}\n"
         if meaning and meaning.lower() != "nan":
             message += f"📖 **Meaning:** {meaning}\n"
         if example and example.lower() != "nan":
