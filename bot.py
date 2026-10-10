@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 
 # 1. Google Sheet እና Telegram ማስተካከያዎች
-SHEET_ID = "1tUiS68hLDQzhFcm2LD8he3dI9H_w1nkQRXg9zsaPBMw"
+SHEET_ID = "1lzFiQduv_JiUS3MCUqhZ70KA0ppJRPNpItUl8Tuc6ew"
 BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJx80qs8DqO0pLSmMw"
 CHAT_ID = "-1004488635599"
 
@@ -11,9 +11,7 @@ CHAT_ID = "-1004488635599"
 START_DATE = datetime(2026, 10, 10)
 
 # 2. ከ Google Sheet መረጃ ማንበብ
-sheet_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
-
-
+sheet_url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=SAT_GMAT_2500_Vocabulary"
 def send_daily_vocab():
   try:
     df = pd.read_csv(sheet_url)
