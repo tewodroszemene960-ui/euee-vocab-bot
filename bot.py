@@ -4,8 +4,8 @@ import requests
 
 # 1. Google Sheet እና Telegram ማዋቀሪያዎች
 SHEET_ID = "1lzFiQduv_JiUS3MCUqhZ70KA0ppJRPNpItUl8Tuc6ew"
-BOT_TOKEN = "8801487602:AAE41qdLWZb1qdTJnIJX80qs8DqO0pLSmMw"
-CHAT_ID = "-1004488635599"
+BOT_TOKEN = "8925620994:AAHJBv5vKtzVhz35wEXlP01H9qNO5PdHGWc"
+CHAT_ID = "@t_h_e_t_h_e12"
 
 # 2. የሚጀምርበት ቀን (October 10, 2026)
 START_DATE = datetime(2026, 10, 10)
@@ -31,7 +31,7 @@ def send_daily_vocab():
     count = 10
 
     if start_index >= len(df):
-        print("🎉  बधाई! አዲስ ቃላት የሉም፣ 2,500 ቃላት በሙሉ ተጠናቀዋል!")
+        print("🎉 እንኳን ደስ አለዎት! 2,500 ቃላት በሙሉ ተጠናቀዋል!")
         return
 
     selected_words = df.iloc[start_index : start_index + count]
